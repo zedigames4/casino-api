@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PLINKO</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <link rel="stylesheet" href='../assets/css/popupButtons.css'>
+        <link rel="stylesheet" href="css/reset.css" type="text/css">
+        <link rel="stylesheet" href="css/main.css" type="text/css">
+        <link rel="stylesheet" href="css/orientation_utils.css" type="text/css">
+        <link rel='shortcut icon' type='image/x-icon' href='./favicon.ico' />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui" />
+	<meta name="msapplication-tap-highlight" content="no"/>
+
+        <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="js/createjs.min.js"></script>
+        <script type="text/javascript" src="js/howler.min.js"></script>
+        <script type="text/javascript" src="js/platform.js"></script>
+        <script type="text/javascript" src="js/screenfull.js"></script>
+        <script type="text/javascript" src="js/sprintf.js"></script>
+        <script type="text/javascript" src="js/ctl_utils.js"></script>
+        <script type="text/javascript" src="js/sprite_lib.js"></script>
+        <script type="text/javascript" src="js/settings.js"></script>
+        <script type="text/javascript" src="js/CLang.js"></script>
+        <script type="text/javascript" src="js/CPreloader.js"></script>
+        <script type="text/javascript" src="js/CMain.js"></script>
+        <script type="text/javascript" src="js/CTextButton.js"></script>
+        <script type="text/javascript" src="js/CToggle.js"></script>
+        <script type="text/javascript" src="js/CGfxButton.js"></script>
+        <script type="text/javascript" src="js/CMenu.js"></script>
+        <script type="text/javascript" src="js/CGame.js"></script>
+        <script type="text/javascript" src="js/CInterface.js"></script>
+        <script type="text/javascript" src="js/CCreditsPanel.js"></script>
+        <script type="text/javascript" src="js/CAreYouSurePanel.js"></script>
+        <script type="text/javascript" src="js/CEndPanel.js"></script>
+        <script type="text/javascript" src="js/CGridMapping.js"></script>
+        <script type="text/javascript" src="js/CCell.js"></script>
+        <script type="text/javascript" src="js/CBall.js"></script>
+        <script type="text/javascript" src="js/CBallGenerator.js"></script>
+        <script type="text/javascript" src="js/CInsertTubeController.js"></script>
+        <script type="text/javascript" src="js/CSlot.js"></script>
+        <script type="text/javascript" src="js/CScoreBasketController.js"></script>
+        <script type="text/javascript" src="js/CBasket.js"></script>
+        <script type="text/javascript" src="js/CGUIExpandible.js"></script>
+        <script type="text/javascript" src="js/CCTLText.js"></script>
+        
+    </head>
+    <body ondragstart="return false;" ondrop="return false;" >
+    <main class="page-content">
+        <div style="position: fixed; background-color: transparent; top: 0px; left: 0px; width: 100%; height: 100%"></div>
+        <script>
+            $(document).ready(function(){
+                var oMain = new CMain({
+                    start_credit: 100,      //Starting credits value
+                    start_bet: 10,          //Base starting bet. Will increment with multiplier in game
+                    max_multiplier: 5,      //Max multiplier value
+
+                    bank_cash : 100,       //Starting credits owned by the bank. When a player win, founds will be subtract from here. When a player lose or bet, founds will be added here. If bank is 0, players always lose, in order to fill the bank.
+
+                    prize: [0,20,100,50,0,10],  //THE AMOUNT WON BY THE PLAYER;
+                    prize_probability: [10,8,1,4,10,10], //THE OCCURENCY WIN OF THAT PRIZE. THE RATIO IS CALCULATED BY THE FORMULA: (single win occurrence/sum of all occurrence). For instance, in this case, prize 100 have 1/43 chance. Prize 50 have 4/43 chance.
+
+                    audio_enable_on_startup:false, //ENABLE/DISABLE AUDIO WHEN GAME STARTS
+                    show_credits:true,          //SET THIS VALUE TO FALSE IF YOU DON'T WANT TO SHOW CREDITS BUTTON
+                    fullscreen:true,            //SET THIS TO FALSE IF YOU DON'T WANT TO SHOW FULLSCREEN BUTTON
+                    check_orientation:true,     //SET TO FALSE IF YOU DON'T WANT TO SHOW ORIENTATION ALERT ON MOBILE DEVICES
+
+                    //////////////////////////////////////////////////////////////////////////////////////////
+                    ad_show_counter: 5     //NUMBER OF BALL PLAYED BEFORE AD SHOWN
+                    //
+                    //// THIS FUNCTIONALITY IS ACTIVATED ONLY WITH CTL ARCADE PLUGIN.///////////////////////////
+                    /////////////////// YOU CAN GET IT AT: /////////////////////////////////////////////////////////
+                    // http://codecanyon.net/item/ctl-arcade-wordpress-plugin/13856421?s_phrase=&s_rank=27 ///////////
+
+                });
+
+                $(oMain).on("recharge", function (evt) {
+                    //INSERT HERE YOUR RECHARGE SCRIPT THAT RETURNS MONEY TO RECHARGE
+                    var iMoney = 100;
+                    if(s_oGame !== null){
+                        s_oGame.addNewCredits(iMoney);
+                    }
+                });
+
+                $(oMain).on("start_session", function(evt) {
+                    if(getParamValue('ctl-arcade') === "true"){
+                        parent.__ctlArcadeStartSession();
+                    }
+                    //...ADD YOUR CODE HERE EVENTUALLY
+                });
+
+                $(oMain).on("end_session", function(evt) {
+                    if(getParamValue('ctl-arcade') === "true"){
+                        parent.__ctlArcadeEndSession();
+                    }
+                    //...ADD YOUR CODE HERE EVENTUALLY
+                });
+
+                $(oMain).on("restart_level", function(evt, iLevel) {
+                    if(getParamValue('ctl-arcade') === "true"){
+                        parent.__ctlArcadeRestartLevel({level:iLevel});
+                    }
+                    //...ADD YOUR CODE HERE EVENTUALLY
+                });
+
+                $(oMain).on("save_score", function(evt,iScore, szMode) {
+                    if(getParamValue('ctl-arcade') === "true"){
+                        parent.__ctlArcadeSaveScore({score:iScore, mode: szMode});
+                    }
+                    //...ADD YOUR CODE HERE EVENTUALLY
+                });
+
+                $(oMain).on("start_level", function(evt, iLevel) {
+                    if(getParamValue('ctl-arcade') === "true"){
+                        parent.__ctlArcadeStartLevel({level:iLevel});
+                    }
+                    //...ADD YOUR CODE HERE EVENTUALLY
+                });
+
+                $(oMain).on("end_level", function(evt,iLevel) {
+                    if(getParamValue('ctl-arcade') === "true"){
+                        parent.__ctlArcadeEndLevel({level:iLevel});
+                    }
+                    //...ADD YOUR CODE HERE EVENTUALLY
+                });
+
+                $(oMain).on("show_interlevel_ad", function(evt) {
+                    if(getParamValue('ctl-arcade') === "true"){
+                        parent.__ctlArcadeShowInterlevelAD();
+                    }
+                    //...ADD YOUR CODE HERE EVENTUALLY
+                });
+
+                $(oMain).on("share_event", function(evt, iScore) {
+                    if(getParamValue('ctl-arcade') === "true"){
+                        parent.__ctlArcadeShareEvent({   img: TEXT_SHARE_IMAGE,
+                            title: TEXT_SHARE_TITLE,
+                            msg: TEXT_SHARE_MSG1 + iScore + TEXT_SHARE_MSG2,
+                            msg_share: TEXT_SHARE_SHARE1 + iScore + TEXT_SHARE_SHARE1});
+                    }
+                    //...ADD YOUR CODE HERE EVENTUALLY
+                });
+
+                $(oMain).on("bet_placed", function (evt, iTotBet) {
+                    //...ADD YOUR CODE HERE EVENTUALLY
+
+                });
+
+                if(isIOS()){
+                    setTimeout(function(){sizeHandler();},200);
+                }else{ sizeHandler(); }
+
+            });
+
+        </script>
+
+        <div class="check-fonts">
+            <p class="check-font-1">impact</p>
+        </div>
+
+
+        <canvas id="canvas" class='ani_hack' width="1280" height="1920"> </canvas>
+        <div data-orientation="portrait" class="orientation-msg-container"><p class="orientation-msg-text">Please rotate your device</p></div>
+        <div id="block_game" style="position: fixed; background-color: transparent; top: 0px; left: 0px; width: 100%; height: 100%; display:none"></div>
+    </main>
+    <div id="background_div_id" onclick="toggleModal()" class="background">
+    </div>
+    <div class="modal">
+        <div class="flex flex-col gap-2">
+            <div class="w-full text-center ">navigate</div>
+            <div class="flex flex-row w-full justify-between">
+                <button class="flex flex-col navBtn items-center">
+                    <span class="material-symbols-outlined">grid_view</span>
+                    <span>Dashboard</span>
+                </button>
+
+                <button class="flex flex-col navBtn items-center">
+                    <span class="material-symbols-outlined">attach_money</span>
+                    <span>Wallet</span>
+                </button>
+                <button class="flex flex-col navBtn  items-center">
+                    <span class="material-symbols-outlined">logout</span>
+                    <span>Logout</span>
+                </button>
+
+
+            </div>
+
+        </div>
+    </div>
+    <script type="text/javascript">
+        const toggleModal = () => document.body.classList.toggle("open")
+    </script>
+    </body>
+</html>

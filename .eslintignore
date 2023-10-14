@@ -1,0 +1,9 @@
+/dist
+coverage/
+build/
+lib/
+extends/
+jest.config.js
+assets
+games
+uploads

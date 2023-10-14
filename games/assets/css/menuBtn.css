@@ -1,0 +1,136 @@
+.con-btns {
+  display: flex;
+  align-itens: end;
+  justify-content: end;
+  margin-right: 15px;
+  margin-top: 90px;
+  border-radius: 50%;
+}
+
+.con-btns button a, .con-btns button a:hover, .con-btns button a:focus, .con-btns button a:active {
+  text-decoration: none;
+  color: inherit;
+}
+
+.con-btns button {
+  border: 0px;
+  background: rgb(0, 70, 150);
+  color: #fff;
+  list-style: none;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-itens: center;
+  justify-content: center;
+  border-radius: 50%;
+  position: absolute;
+  transition: all .5s cubic-bezier( 0.175, 0.885, 0.320, 1.275);
+  Z-index: 1;
+  padding-top: 15px;
+  outline: none;
+  box-shadow: 0px 0px 12px 0px rgba( 69, 62, 235, .3);
+  cursor: pointer;
+}
+
+.con-btns button:not(.btn-menu) i {
+  font-size: 1.4rem;
+  transition: all .25s ease;
+  opacity: 0;
+}
+
+.con-btns .btn-menu {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justity-content: center;
+  padding-left: 15px;
+  background: rgb(0, 70, 150);
+  outline: none;
+  border: 0px;
+  z-index: 100;
+  transition: all .25s ease !important;
+  cursor: pointer;
+}
+
+.con-btns .btn-menu:hover {
+  transform: scale(1.2);
+}
+
+.con-btns .btn-menu i {
+  font-size: 1.8rem;
+  position: absolute;
+  transition: all .25s ease;
+  color: #fff;
+}
+
+.con-btns .btn-menu .bx-x {
+  opacity: 0;
+  transform: scale(0);
+  background: rgb(0, 70, 150);
+}
+
+#check {
+  position: absolute;
+  z-index: 200;
+  opacity: 0;
+  cursor: pointer;
+}
+
+#check:checked ~ .btn-menu .bx-x {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#check:checked ~ .btn-menu .bx-menu {
+  opacity: 0;
+  transform: scale(0);
+}
+
+#check:checked ~ .bx-menu {
+  opacity: 0 !important;
+  transform: rotate(188deg ) scale(0);
+}
+
+#check:checked ~ button {
+  box-shadow: 0px 0px 15px 0px rgba( 0, 70, 150, 1);
+  z-index: 200;
+}
+
+#check:checked ~ button i {
+  opacity: 1;
+}
+
+#check:checked ~ button:hover i {
+  transform: scale(1.2);
+}
+
+#check:checked ~ .btn-menu {
+  transform: scale(1.2);
+}
+
+#check:checked ~ .btn-menu .effect-mouse {
+  opacity: 1;
+}
+
+.con-btns .btn-5 {
+  transition: all .5s cubic-bezier(0.175, 0.885, 0.320, 1.275) .1s;
+}
+
+.con-btns .btn-6 {
+  transition: all .5s cubic-bezier(0.175, 0.885, 0.320, 1.275) .1s;
+}
+
+#check:checked ~ .btn-4 {
+  transform: translate(-65px, 65px);
+}
+
+#check:checked ~ .btn-5 {
+  transform: translate( -90px, 0px);
+}
+
+#check:checked ~ .btn-6 {
+  transform: translate( 0,90px );
+}
